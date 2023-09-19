@@ -51,7 +51,7 @@ def get_drinks():
 
 @app.route('/drinks-detail', methods=['GET'])
 @requires_auth('get:drinks-detail')
-def get_drink_detail(payload):
+def get_drink_detail(jwt):
     all_drinks = Drink.query.all()
     long_drinks = [drink.long() for drink in all_drinks]
 
@@ -71,7 +71,7 @@ def get_drink_detail(payload):
 
 @app.route('/drinks', methods=['POST'])
 @requires_auth('post:drinks')
-def create_drink(payload):
+def create_drink(jwt):
     data = request.get_json()
 
     try:
@@ -103,7 +103,7 @@ def create_drink(payload):
 
 @app.route('/drinks/<int:id>', methods=['PATCH'])
 @requires_auth('patch:drinks')
-def update_drinks(payload, id):
+def update_drinks(jwt, id):
     try:
         drink = find_drink_by_id(id)
         body = get_request_body()
@@ -162,7 +162,7 @@ def get_all_drinks():
 
 @app.route('/drinks/<int:id>', methods=['DELETE'])
 @requires_auth('delete:drinks')
-def delete_drink(payload, id):
+def delete_drink(jwt, id):
     deleted_drink = Drink.query.filter(Drink.id == id).one_or_none()
     if not deleted_drink:
         abort(404)
